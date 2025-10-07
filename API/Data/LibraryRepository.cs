@@ -1,28 +1,22 @@
-using System;
-using API.DTOs;
 using API.Entities;
 using API.Interfaces;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class LibraryRepository(AppDbContext context, IMapper mapper) : ILibraryRepository
+public class LibraryRepository(AppDbContext context) : ILibraryRepository
 {
-    public async Task<IEnumerable<AuthorDto>> GetAllAuthorsAsync()
+    public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
     {
         return await context.Authors
             .Include(a => a.Books)
-            .ProjectTo<AuthorDto>(mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
-    public async Task<AuthorDto?> GetAuthorByIdAsync(int id)
+    public async Task<Author?> GetAuthorByIdAsync(int id)
     {
         return await context.Authors
             .Include(a => a.Books)
-            .ProjectTo<AuthorDto>(mapper.ConfigurationProvider) 
             .FirstOrDefaultAsync(a => a.Id == id);
     }
 
@@ -41,19 +35,17 @@ public class LibraryRepository(AppDbContext context, IMapper mapper) : ILibraryR
         context.Authors.Remove(author);
     }
 
-    public async Task<IEnumerable<BookDto>> GetAllBooksAsync()
+    public async Task<IEnumerable<Book>> GetAllBooksAsync()
     {
         return await context.Books
             .Include(b => b.Author)
-            .ProjectTo<BookDto>(mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
-    public async Task<BookDto?> GetBookByIdAsync(int id)
+    public async Task<Book?> GetBookByIdAsync(int id)
     {
         return await context.Books
             .Include(b => b.Author)
-            .ProjectTo<BookDto>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 
