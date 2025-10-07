@@ -12,6 +12,7 @@
 *.env
 *.db-shm
 *.db-wal
+*.db
 
 # Development settings
 appsettings.Development.json
